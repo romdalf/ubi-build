@@ -1,0 +1,14 @@
+FROM golang:latest AS build
+
+COPY ./hello-path/* /work/
+WORKDIR /work/
+RUN go mod init hello-path
+RUN go build -a .
+
+FROM gcr.io/distroless/static:latest
+
+COPY --from=build /work/hello-path .
+
+EXPOSE 8080
+ENTRYPOINT ["./hello-path"]
+

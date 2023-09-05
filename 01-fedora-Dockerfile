@@ -1,0 +1,15 @@
+FROM fedora:latest AS build
+
+RUN dnf -y install go
+
+COPY ./hello-path/* .
+RUN go mod init hello-path
+RUN go build .
+
+FROM fedora:latest
+
+COPY --from=build ./hello-path .
+
+EXPOSE 8080
+ENTRYPOINT ["./hello-path"]
+

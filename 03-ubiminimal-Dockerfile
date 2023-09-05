@@ -1,0 +1,13 @@
+FROM registry.access.redhat.com/ubi8/go-toolset:latest AS build
+
+COPY ./hello-path/* .
+RUN go mod init hello-path
+RUN go build .
+
+FROM registry.access.redhat.com/ubi8/ubi-minimal:latest
+
+COPY --from=build ./opt/app-root/src/hello-path .
+
+EXPOSE 8080
+ENTRYPOINT ["./hello-path"]
+
